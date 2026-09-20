@@ -119,6 +119,7 @@ namespace Lxy.UIEffectGenerator.Editor
                 ValidateSlicedSampling(checks);
                 ValidateResourceMatching(checks);
                 ValidateGeometryRecovery(checks);
+                ValidatePreviewTransparency(checks);
                 ValidateRankedTemplates(checks);
                 ValidateIndependentSurface(schema, folder, checks);
 
@@ -176,6 +177,47 @@ namespace Lxy.UIEffectGenerator.Editor
         {
             if (!condition) throw new InvalidOperationException("Fidelity regression failed: " + description);
             checks.Add(description);
+        }
+
+        private static void ValidatePreviewTransparency(List<string> checks)
+        {
+            // No imported assets or project settings are changed. Run this on
+            // Gamma and Linear editors: RGB-only HDR paths used to erase alpha.
+            var texture = new Texture2D(64, 64, TextureFormat.RGBA32, false);
+            Sprite sprite = null;
+            IDisposable renderer = null;
+            Texture2D preview = null;
+            try
+            {
+                for (int y = 0; y < 64; y++)
+                    for (int x = 0; x < 64; x++)
+                        texture.SetPixel(x, y, x < 12 || x >= 52 || y < 12 || y >= 52
+                            ? Color.clear : new Color(1f, 1f, 1f, x < 32 ? .35f : 1f));
+                texture.Apply();
+                sprite = Sprite.Create(texture, new Rect(0, 0, 64, 64), new Vector2(.5f, .5f), 100);
+                Type rendererType = typeof(UIEffectResourceResolver).GetNestedType("SpritePreviewRenderer",
+                    BindingFlags.NonPublic);
+                renderer = (IDisposable)Activator.CreateInstance(rendererType, new object[] { 24 });
+                object descriptor = rendererType.GetMethod("Render").Invoke(renderer,
+                    new object[] { sprite, 64f, 64f, false, 64f, 64f });
+                var pixels = (Color[])descriptor.GetType().GetProperty("Pixels").GetValue(descriptor);
+                Require(pixels.Any(pixel => pixel.a < .01f) && pixels.Any(pixel => pixel.a > .99f),
+                    "Sprite matching preserves transparent padding and opaque shape", checks);
+                Require(pixels.Any(pixel => Mathf.Abs(pixel.a - .35f) < .015f &&
+                    pixel.r > .95f && pixel.g > .95f && pixel.b > .95f),
+                    "Sprite matching preserves translucent alpha and unpremultiplied color", checks);
+                using (var ui = new UIEffectPreviewRenderer(64, 64, 64))
+                    preview = ui.RenderSprite(sprite, Color.white, false);
+                Require(preview.GetPixel(2, 2).a < .01f && preview.GetPixel(42, 32).a > .99f,
+                    "UGUI contact sheets preserve transparent padding and opaque content", checks);
+            }
+            finally
+            {
+                renderer?.Dispose();
+                if (preview != null) UnityEngine.Object.DestroyImmediate(preview);
+                if (sprite != null) UnityEngine.Object.DestroyImmediate(sprite);
+                UnityEngine.Object.DestroyImmediate(texture);
+            }
         }
 
         private static void ValidateSearchCache(UIEffectResourceResolver resolver, UIEffectSchema schema,

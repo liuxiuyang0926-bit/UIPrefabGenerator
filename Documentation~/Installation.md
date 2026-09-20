@@ -16,7 +16,7 @@
 独立仓库的根目录直接包含 `package.json` 和 `Editor/`。固定版本地址：
 
 ```text
-https://github.com/liuxiuyang0926-bit/UIPrefabGenerator.git#v1.1.4
+https://github.com/liuxiuyang0926-bit/UIPrefabGenerator.git#v1.1.5
 ```
 
 需要跟随最新发布提交时也可使用：
@@ -56,16 +56,21 @@ Package Manager 的 Samples 中提供 `Basic UGUI Schema`，导入后可选中
 原有有效字体保持不变；缺失字体和不兼容材质按当前项目资源回退并记录提示。
 缺少中文字体仍需提供项目字体，工具不会复制其他工程的字体或伪装成同款字体。
 
-请在目标工程使用上面的独立仓库地址更新 Git 包，并确认版本为 `1.1.4`。Git 依赖会记录解析到的提交，
-仅推送远程不会自动替换已有的 PackageCache；可在 Package Manager 中重新添加相同 Git URL
-请求更新，或将 URL 的 `#main` 替换为刚推送的确切提交号。不要直接修改 `Library/PackageCache`。
+请在目标工程使用上面的独立仓库地址更新 Git 包，并确认版本为 `1.1.5`。Git 依赖会记录解析到的提交，
+仅推送远程不会自动替换已有的 PackageCache；旧的 `#v1.1.4` 固定版本地址需要替换为 `#v1.1.5`。
+在 Package Manager 中添加新的完整 Git URL 即可更新同一个包。不要直接修改 `Library/PackageCache`。
 已分析成功、仅在 Prefab 构建时失败的 Schema 可以直接重建，无需再次调用 AI。
+
+1.1.5 修复了宿主工程 HDR 路径让匹配相机丢失透明度的问题。同一 PNG 在一个工程匹配成功、
+另一个工程却显示色块或选错底条时，升级后可选中原 Schema，执行
+`Assets/UI工具/根据选中的UISchema生成Prefab`。修复只作用于工具的临时相机，
+不要求修改工程的 Gamma/Linear 设置，也不依赖 `.agents/skills`。
 
 ## 从本地安装
 
 公司网络无法访问 Git 时，可分发本包的 `.tgz` 文件，在 Package Manager 中选择
 `Add package from tarball` 安装，无需解压。每次更新分发新的版本包。
-`UIPrefabGenerator-1.1.4.tgz` 包含跨工程 Sprite 匹配、误补文字底板和徽标透明留边修复；
+`UIPrefabGenerator-1.1.5.tgz` 包含跨工程透明度、Sprite 匹配、误补文字底板和徽标透明留边修复；
 升级后可先使用已有 UISchema 重建 Prefab，
 无需重新调用 AI。若原 Schema 将纹理节点误标成 ColorFallback，需复核该节点或重新分析。
 
@@ -166,7 +171,7 @@ UIEffectPrefabGenerationResult result =
 powershell -NoProfile -ExecutionPolicy Bypass -File Tools/Export-UIPrefabGenerator.ps1 -CreateTarball
 ```
 
-输出到 `Build/UPMPackages/UIPrefabGenerator-1.1.4/`，并创建同目录的 `.tgz` 离线包。
+输出到 `Build/UPMPackages/UIPrefabGenerator-1.1.5/`，并创建同目录的 `.tgz` 离线包。
 省略 `-CreateTarball` 时只导出文件夹。也可传入
 `-Destination <空目录>`。脚本保留 `.meta`，只复制包文件，并校验依赖和 Editor 程序集边界；
 不会覆盖已有非空目录，也不会包含 Lxy 项目适配器、业务代码、游戏资源或账号配置。

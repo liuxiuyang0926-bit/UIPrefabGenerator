@@ -9491,6 +9491,11 @@ namespace Lxy.UIEffectGenerator.Editor
                 previewCamera = cameraObject.GetComponent<Camera>();
                 previewCamera.scene = previewScene;
                 previewCamera.enabled = false;
+                // HDR intermediates can use an RGB-only format in the host
+                // project. Matching needs the Sprite's alpha for its silhouette
+                // and for compositing translucent pixels against the reference.
+                previewCamera.allowHDR = false;
+                previewCamera.allowMSAA = false;
                 previewCamera.orthographic = true;
                 previewCamera.clearFlags = CameraClearFlags.SolidColor;
                 previewCamera.backgroundColor = Color.clear;

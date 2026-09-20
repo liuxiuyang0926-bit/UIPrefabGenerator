@@ -35,6 +35,10 @@ namespace Lxy.UIEffectGenerator.Editor
             camera = cameraObject.GetComponent<Camera>();
             camera.scene = scene;
             camera.enabled = false;
+            // Keep contact sheets and audit readback in the explicit RGBA target;
+            // a project-dependent HDR intermediate can discard transparency.
+            camera.allowHDR = false;
+            camera.allowMSAA = false;
             camera.orthographic = true;
             camera.orthographicSize = height * .5f;
             camera.aspect = width / height;
