@@ -1,0 +1,29 @@
+{
+  "name": "com.lxy.ui-effect-generator",
+  "version": "1.1.4",
+  "displayName": "LxyGame.UIPrefabGenerator",
+  "description": "Portable screenshot and Figma to Unity UGUI Prefab generator with deterministic Sprite matching.",
+  "unity": "2022.3",
+  "keywords": [
+    "ui",
+    "ugui",
+    "prefab",
+    "figma"
+  ],
+  "dependencies": {
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.textmeshpro": "3.0.7",
+    "com.unity.ugui": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Basic UGUI Schema",
+      "description": "A small editable UGUI card. Generate it without AI or project-specific assets.",
+      "path": "Samples~/BasicUGUI"
+    }
+  ],
+  "author": {
+    "name": "Lxy"
+  }
+}

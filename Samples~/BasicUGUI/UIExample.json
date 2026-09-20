@@ -1,0 +1,55 @@
+{
+  "version": "2.0",
+  "name": "UIExample",
+  "designWidth": 640,
+  "designHeight": 360,
+  "children": [
+    {
+      "name": "Card",
+      "type": "Image",
+      "x": 80,
+      "y": 40,
+      "width": 480,
+      "height": 280,
+      "color": "#243047",
+      "resourcePolicy": "ColorFallback",
+      "children": [
+        {
+          "name": "Title",
+          "type": "Text",
+          "x": 32,
+          "y": 32,
+          "width": 416,
+          "height": 48,
+          "text": "UIPrefabGenerator",
+          "fontSize": 30,
+          "alignment": "Center"
+        },
+        {
+          "name": "Description",
+          "type": "Text",
+          "x": 32,
+          "y": 96,
+          "width": 416,
+          "height": 48,
+          "text": "Editable UGUI, ready for your project.",
+          "fontSize": 20,
+          "alignment": "Center"
+        },
+        {
+          "name": "Confirm",
+          "type": "Button",
+          "x": 140,
+          "y": 184,
+          "width": 200,
+          "height": 56,
+          "color": "#356ECF",
+          "resourcePolicy": "ColorFallback",
+          "text": "Continue",
+          "fontSize": 24,
+          "alignment": "Center"
+        }
+      ]
+    }
+  ]
+}
